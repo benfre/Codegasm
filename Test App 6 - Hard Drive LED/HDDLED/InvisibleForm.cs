@@ -37,6 +37,9 @@ namespace HDDLED
             hddNotifyIcon.Icon = idleIcon;
             hddNotifyIcon.Visible = true;
 
+            hddNotifyIcon.BalloonTipText = "HDD Bytes:";
+            hddNotifyIcon.Click += hddNotifyIcon_Click;
+
             // Create all context menu items and add them to notification tray icon
             MenuItem progNameMenuItem = new MenuItem("Hard Drive LED v1.0 BETA by: Barnacules");
             MenuItem breakMenuItem = new MenuItem("-");
@@ -60,6 +63,13 @@ namespace HDDLED
             hddInfoWorkerThread = new Thread(new ThreadStart(HddActivityThread));
             hddInfoWorkerThread.Start();
         }
+
+        // Show Ballon tip for 10s
+        void hddNotifyIcon_Click(object sender, EventArgs e)
+        {
+            hddNotifyIcon.ShowBalloonTip(10000);
+        }
+
         #endregion
 
         #region Context Menu Event Handlers
@@ -96,16 +106,20 @@ namespace HDDLED
                         // Only process the _Total instance and ignore all the indevidual instances
                         if( obj["Name"].ToString() == "_Total")
                         {
-                            if( Convert.ToUInt64(obj["DiskBytesPersec"]) > 0 )
+                            ulong bytes = Convert.ToUInt64(obj["DiskBytesPersec"]);
+                            if(  bytes > 0 )
                             {
                                 // Show busy icon
                                 hddNotifyIcon.Icon = busyIcon;
+
                             }
                             else
                             {
                                 // Show idle icon
                                 hddNotifyIcon.Icon = idleIcon;
                             }
+                            // change ballon tip text include Bps
+                            hddNotifyIcon.BalloonTipText = "HDD Bytes:" + bytes;
                         }
                     }
 

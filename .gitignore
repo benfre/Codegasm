@@ -14,6 +14,14 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 
+# User-specific files
+*.suo
+*.user
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+
 # =========================
 # Operating System Files
 # =========================
